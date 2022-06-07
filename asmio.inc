@@ -1,3 +1,10 @@
+; exit(status)
+%macro exit 1
+        mov     ebx, %1     ; status -> ebx
+        mov     eax, 1      ; exit
+        int     0x80        ; syscall
+%endmacro
+
 ; read(file_descriptor, buffer, count)
 ; returns how much characters have been read
 %macro read 3
