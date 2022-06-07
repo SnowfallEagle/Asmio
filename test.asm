@@ -19,4 +19,4 @@ _start: getc                ; get character
 
 .clean: add     esp, 256    ; free string
 
-        exit    0           ; successful exit
+        exit                ; successful exit

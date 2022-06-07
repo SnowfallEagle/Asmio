@@ -5,7 +5,7 @@
 %define EOF -1
 
 ; exit(status)
-%macro exit 1
+%macro exit 0-1 0
         mov     ebx, %1     ; status -> ebx
         mov     eax, 1      ; exit
         int     0x80        ; syscall
