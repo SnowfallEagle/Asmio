@@ -1,5 +1,25 @@
-; write(file_descriptor, buffer, buffer_size)
-; returns how much chars have been written
+; read(file_descriptor, buffer, count)
+; returns how much characters have been read
+%macro read 3
+        push    ebx         ; save ebx
+        pushf               ; save flags
+
+        push    %3
+        push    %2
+        push    %1
+        pop     ebx         ; file_descriptor
+        pop     ecx         ; buffer
+        pop     edx         ; count
+
+        mov     eax, 3      ; read
+        int     0x80        ; syscall
+
+        pop     ebx         ; restore ebx
+        popf                ; restore flags
+%endmacro
+
+; write(file_descriptor, buffer, count)
+; returns how much characterss have been written
 %macro write 3
         push    ebx         ; save ebx
 
@@ -16,16 +36,14 @@
         pop     ebx         ; restore ebx
 %endmacro
 
+; getc()
 ; return character in AL, -1 on EOF
 %macro getc 0
         pushf               ; save flags
         sub     esp, 4      ; local variable for character
 
-        mov     eax, 3      ; read
-        mov     ebx, 0      ; stdin
-        mov     ecx, esp    ; buffer
-        mov     edx, 1      ; 1 character
-        int     0x80        ; syscall
+        mov     edi, esp    ; esp -> edi, because we can't read from esp
+        read    0, edi, 1   ; read from stdout, in edi, 1 character
 
         test    eax, eax    ; if read count > 1
         jnz     %%success   ;   jump to success
