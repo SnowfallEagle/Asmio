@@ -2,6 +2,8 @@
 %define stdout 1
 %define stderr 2
 
+%define EOF -1
+
 ; exit(status)
 %macro exit 1
         mov     ebx, %1     ; status -> ebx
@@ -10,7 +12,7 @@
 %endmacro
 
 ; read(file_descriptor, buffer, count)
-; returns how much characters have been read
+; returns how much characters have been read, EOF on end of file
 %macro read 3
         push    ebx         ; save ebx
         pushf               ; save flags
@@ -61,7 +63,7 @@
         mov     eax, -1     ; indicate error
         jmp     %%return    ; return value
 %%success:
-        mov     eax, [esp]  ; [esp] -> eax
+        mov     al, [edi]   ; [edi] -> al
 
 %%return:
         add     esp, 4      ; free local variable
