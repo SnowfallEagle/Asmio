@@ -1,3 +1,7 @@
+%define stdin  0
+%define stdout 1
+%define stderr 2
+
 ; exit(status)
 %macro exit 1
         mov     ebx, %1     ; status -> ebx
@@ -50,7 +54,7 @@
         sub     esp, 4      ; local variable for character
 
         mov     edi, esp    ; esp -> edi, because we can't read from esp
-        read    0, edi, 1   ; read from stdout, in edi, 1 character
+        read    stdin, edi, 1   ; read from stdout, in edi, 1 character
 
         test    eax, eax    ; if read count > 1
         jnz     %%success   ;   jump to success
@@ -74,7 +78,7 @@
 
         mov     [esp], %1   ; first arg -> local variable
         mov     esi, esp    ; esp -> esi, because we can't write from esp
-        write   1, esi, 1   ; write in stdout, from esi, 1 character
+        write   stdout, esi, 1  ; write in stdout, from esi, 1 character
 
         add     esi, 4      ; free memory
         pop     ebx         ; restore ebx
