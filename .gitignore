@@ -1,4 +1,6 @@
 test
-*o
+*.o
 *~
 TODO
+log
+*.s
