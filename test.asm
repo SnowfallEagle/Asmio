@@ -3,6 +3,9 @@
 
 global _start
 
+section .data
+fn		db "log", 0
+
 section .text
 ;; Check char operations
 _start: getc                ; get character
@@ -17,6 +20,11 @@ _start: getc                ; get character
         je      .clean      ;   jump to clean
         write   stdout, esi, eax    ; write what we`ve read
 
-.clean: add     esp, 256    ; free string
+;; Check open/close operations
+		open	fn, 0x241, 666q	; open file
+		cmp		eax, -1		; if -1 returned
+		je		.clean		;   jump to clean
+		write	eax, esi, eax	; write to file
 
+.clean: add     esp, 256    ; free string
         exit                ; successful exit

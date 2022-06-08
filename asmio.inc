@@ -52,6 +52,28 @@
         pop     ebx         ; restore ebx
 %endmacro
 
+; open(file_path that have to has null-byte)
+; returns file descriptor, -1 on error
+%macro open 2-3
+		pushf				; save flags
+
+	%if %0 == 3				; put args in registers
+		push	%3
+	%endif
+		push	%2
+		push	%1
+		pop		ebx
+		pop		ecx
+	%if %0 == 3
+		pop		edx
+	%endif
+
+		mov		eax, 5		; open
+		int		0x80		; syscall
+
+		popf				; restore flags
+%endmacro
+
 ; getc()
 ; return character in AL, -1 on EOF
 %macro getc 0
