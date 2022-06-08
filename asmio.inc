@@ -56,7 +56,7 @@
 
         int     0x80        ; syscall
 
-        pop     ebx
+        pop     ebx         ; restore ebx
 %endmacro
 
 ; exit(status)
@@ -114,10 +114,10 @@
         mov     edi, esp    ; edi == buffer
 
         read    stdin, edi, 1   ; read from stdout, in edi, 1 character
-        test    eax, eax    ; if read count > 1
-        jnz     %%success   ;   jump to success
-        mov     eax, -1     ; indicate error
-        jmp     %%return    ; return value
+        test    eax, eax        ; if read count > 1
+        jnz     %%success       ;   jump to success
+        mov     eax, -1         ; indicate error
+        jmp     %%return        ; return value
 %%success:
         mov     al, [edi]   ; [edi] -> al
 
@@ -136,7 +136,7 @@
         sub     esp, 4      ; local variable
         mov     esi, esp    ; esi == buffer
 
-        mov byte [esi], %1  ; first arg -> local variable
+        mov byte [esi], %1      ; first arg -> local variable
         write   stdout, esi, 1  ; write in stdout, from esi, 1 character
 
         add     esp, 4      ; free memory
@@ -170,10 +170,10 @@
         pushf               ; save flags
         push    esi         ; save esi
 
-        mov     esi, %1     ; first arg -> esi
-        strlen  esi         ; string length -> eax
+        mov     esi, %1             ; first arg -> esi
+        strlen  esi                 ; string length -> eax
         write   stdout, esi, eax    ; write in stdout, from esi, eax characters
-        putc    10          ; new line
+        putc    10                  ; new line
 
         pop     esi         ; restore esi
         popf                ; restore flags

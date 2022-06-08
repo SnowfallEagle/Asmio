@@ -29,22 +29,22 @@ _start:
 
 ;; Check string operations
 .next:
-        sub     esp, 260    ; 256 byte string + 4 byte integer
+        sub     esp, 260        ; 256 byte string + 4 byte integer
         lea     esi, [esp+4]    ; string == esi
-        lea     edi, [esp]  ; integer == edi
+        lea     edi, [esp]      ; integer == edi
 
-        read    stdin, esi, 256 ; read string
-        cmp     eax, EOF    ; if not EOF
-        je      .clean      ;   jump to clean
-        mov     [edi], eax  ; eax -> integer
+        read    stdin, esi, 256     ; read string
+        cmp     eax, EOF            ; if not EOF
+        je      .clean              ;   jump to clean
+        mov     [edi], eax          ; eax -> integer
         write   stdout, esi, eax    ; write what we`ve read
 
 ;; Check open/close operations
-        open    fn, AO_W, MO_ALL    ; create file for all for writing
-        cmp     eax, -1     ; if -1 returned
-        je      .clean      ;   jump to clean
-        write   eax, esi, dword [edi] ; write to file
-        close   eax         ; close file
+        open    fn, AO_W, MO_ALL        ; create file for all for writing
+        cmp     eax, -1                 ; if -1 returned
+        je      .clean                  ;   jump to clean
+        write   eax, esi, dword [edi]   ; write to file
+        close   eax                     ; close file
 
 .clean: add     esp, 260    ; free string and integer
         exit                ; successful exit
