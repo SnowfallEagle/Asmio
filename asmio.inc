@@ -1,5 +1,6 @@
 ;;; License: LGPL-2.1
 ;;; Copyright (C) 2022 Sergey Nikonov (17seannnn)
+;;; CDECL
 
 ;; Input/Output definitions
 %define stdin  0
@@ -66,7 +67,7 @@
 %endmacro
 
 ; write(file_descriptor, buffer, count)
-; returns how much characterss have been written
+; returns how much characters have been written
 %macro write 3
         _syscall    4, %1, %2, %3
 %endmacro
@@ -85,6 +86,18 @@
 ; returns 0 on success, -1 on error
 %macro close 1
         _syscall    6, %1
+%endmacro
+
+; getargc(register)
+; returns argc, works only on start when esp is not spoiled
+%macro getargc 1
+        mov     %1, [esp]
+%endmacro
+
+; getargv(register)
+; returns address of first arg pointer, to go through add 4 to the address
+%macro getargv 1
+        mov     %1, [esp+4]
 %endmacro
 
 ; getc()
@@ -113,14 +126,12 @@
 ; return 1 on success, 0 on fail
 %macro putc 1
         pushf               ; save flags
-        push    ebx         ; save ebx
         sub     esp, 4      ; local variable
+        mov     esi, esp    ; esi == buffer
 
-        mov     [esp], %1   ; first arg -> local variable
-        mov     esi, esp    ; esp -> esi, because we can't write from esp
+        mov byte [esi], %1  ; first arg -> local variable
         write   stdout, esi, 1  ; write in stdout, from esi, 1 character
 
         add     esi, 4      ; free memory
-        pop     ebx         ; restore ebx
         popf                ; restore flags
 %endmacro
