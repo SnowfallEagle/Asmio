@@ -17,11 +17,18 @@ _start:
         putc    al              ; put character
         putc    10              ; new line
 
-;; Show argv[0]
+;; Show all arguments
+        sub     eax, "0"        ; get integer from character
         getargv edi             ; argv -> edi
+.lp:    mov     ebx, [edi]      ; argv string address -> ebx
+        test    ebx, ebx        ; if ebx == 0
+        jz      .next           ;   jump to next
         puts    [edi]           ; put string from 1 arg
+        add     edi, 4          ; get next address
+        jmp     .lp             ; jump to loop
 
 ;; Check string operations
+.next:
         sub     esp, 260    ; 256 byte string + 4 byte integer
         lea     esi, [esp+4]    ; string == esi
         lea     edi, [esp]  ; integer == edi
