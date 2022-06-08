@@ -108,9 +108,9 @@
 ; return character in AL, -1 on EOF
 %macro getc 0
         pushf               ; save flags
-        sub     esp, 4      ; local variable for character
+        sub     esp, 4      ; local variable for buffer
 
-        mov     edi, esp    ; esp -> edi, because we can't read from esp
+        mov     edi, esp    ; edi == buffer
         read    stdin, edi, 1   ; read from stdout, in edi, 1 character
 
         test    eax, eax    ; if read count > 1
@@ -130,12 +130,14 @@
 ; return 1 on success, 0 on fail
 %macro putc 1
         pushf               ; save flags
+        push    esi         ; save esi
         sub     esp, 4      ; local variable
         mov     esi, esp    ; esi == buffer
 
         mov byte [esi], %1  ; first arg -> local variable
         write   stdout, esi, 1  ; write in stdout, from esi, 1 character
 
-        add     esi, 4      ; free memory
+        add     esp, 4      ; free memory
+        pop     esi         ; restore esi
         popf                ; restore flags
 %endmacro

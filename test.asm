@@ -15,7 +15,7 @@ argvlen equ $-argvmsg
 
 section .text
 _start:
-        getargc eax         ; getargc -> eax
+        getargc eax         ; argc -> eax
         add     eax, "0"    ; make character from number (argc < 10)
         sub     esp, 4      ; memory for buffer
         mov     edi, esp    ; edi is buffer
@@ -24,11 +24,11 @@ _start:
         write   stdout, edi, 1  ; write character
         add     esp, 4      ; free stack
         putc    10          ; new line
-        ;getargv edi
+
+        getargv edi         ; argv -> edi
         write   stdout, argvmsg, argvlen    ; write argv msg
-        ;strlen argv, eax
-        ;write  stdout, edi, eax
         putc    10          ; new line
+        ;puts    edi         ; put string in argv
 
 ;; Check string operations
         sub     esp, 260    ; 256 byte string + 4 byte integer
