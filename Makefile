@@ -9,4 +9,4 @@ test: test.o
 	ld $(LDFLAGS) $^ -o $@
 
 clean:
-	$(RM) -f *.o test
+	$(RM) -f *.o *.s test log
