@@ -42,7 +42,7 @@ _start:
         write   stdout, esi, eax    ; write what we`ve read
 
 ;; Check open/close operations
-        open    fn, AO_W, 666q   ; create file for writing, truncate it
+        open    fn, AO_W, MO_ALL    ; create file for all for writing
         cmp     eax, -1     ; if -1 returned
         je      .clean      ;   jump to clean
         write   eax, esi, dword [edi] ; write to file

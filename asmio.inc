@@ -24,6 +24,10 @@
 %define AO_W+ 0x242
 %define AO_A  0x440
 
+;; Mode Open definitions
+%define MO_ALL     666q
+%define MO_CREATOR 600q
+
 ;; Macroses
 %macro _syscall 1-4
         push    ebx         ; save ebx
