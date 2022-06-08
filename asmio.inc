@@ -142,3 +142,38 @@
         pop     esi         ; restore esi
         popf                ; restore flags
 %endmacro
+
+; strlen(null-terminated string)
+; returns string length
+%macro strlen 1
+        pushf               ; save flags
+
+        mov     edx, %1     ; first arg -> edx
+        xor     eax, eax    ; clean counter
+
+%%lp:
+        mov     cl, [edx]   ; [edx] -> cl
+        test    cl, cl      ; if ecx == 0
+        jz      %%return    ;   jump to return
+        inc     eax         ; increment counter
+        inc     edx         ; increment address
+        jmp     %%lp        ; jump to loop
+
+%%return:
+        popf                ; restore flags
+%endmacro
+
+; puts(null-terminated string)
+; returns non-zero value on success
+%macro puts 1
+        pushf               ; save flags
+        push    esi         ; save esi
+
+        mov     esi, %1     ; first arg -> esi
+        strlen  esi         ; string length -> eax
+        write   stdout, esi, eax    ; write in stdout, from esi, eax characters
+        putc    10          ; new line
+
+        pop     esi         ; restore esi
+        popf                ; restore flags
+%endmacro
