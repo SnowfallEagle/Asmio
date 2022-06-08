@@ -65,23 +65,23 @@
 ; open(file_path that have to has null-byte)
 ; returns file descriptor, -1 on error
 %macro open 2-3
-		pushf				; save flags
+        pushf               ; save flags
 
-	%if %0 == 3				; put args in registers
-		push	%3
-	%endif
-		push	%2
-		push	%1
-		pop		ebx
-		pop		ecx
-	%if %0 == 3
-		pop		edx
-	%endif
+    %if %0 == 3             ; put args in registers
+        push    %3
+    %endif
+        push    %2
+        push    %1
+        pop        ebx
+        pop        ecx
+    %if %0 == 3
+        pop        edx
+    %endif
 
-		mov		eax, 5		; open
-		int		0x80		; syscall
+        mov        eax, 5   ; open
+        int        0x80     ; syscall
 
-		popf				; restore flags
+        popf                ; restore flags
 %endmacro
 
 ; close(file_descriptor)

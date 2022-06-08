@@ -4,7 +4,7 @@
 global _start
 
 section .data
-fn		db "log", 0
+fn      db "log", 0
 
 section .text
 ;; Check char operations
@@ -26,10 +26,10 @@ _start: getc                ; get character
         mov     ebx, O_WRONLY   ; new file flags
         or      ebx, O_CREAT
         or      ebx, O_TRUNC
-		open	fn, ebx, 666q ; open file
-		cmp		eax, -1		; if -1 returned
-		je		.clean		;   jump to clean
-		write	eax, esi, dword [edi] ; write to file
+        open    fn, ebx, 666q   ; open file
+        cmp     eax, -1     ; if -1 returned
+        je      .clean      ;   jump to clean
+        write   eax, esi, dword [edi] ; write to file
         close   eax         ; close file
 
 .clean: add     esp, 260    ; free string and integer
