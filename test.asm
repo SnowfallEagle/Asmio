@@ -25,6 +25,7 @@ _start: getc                ; get character
 		cmp		eax, -1		; if -1 returned
 		je		.clean		;   jump to clean
 		write	eax, esi, eax	; write to file
+        close   eax         ; close file
 
 .clean: add     esp, 256    ; free string
         exit                ; successful exit

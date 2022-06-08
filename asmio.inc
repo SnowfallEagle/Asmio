@@ -74,6 +74,14 @@
 		popf				; restore flags
 %endmacro
 
+; close(file_descriptor)
+; returns 0 on success, -1 on error
+%macro close 1
+        mov     ebx, %1     ; first arg -> ebx
+        mov     eax, 6      ; close
+        int     0x80        ; syscall
+%endmacro
+
 ; getc()
 ; return character in AL, -1 on EOF
 %macro getc 0
