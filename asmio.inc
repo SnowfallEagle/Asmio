@@ -1,6 +1,6 @@
 ;;; License: LGPL-2.1
 ;;; Copyright (C) 2022 Sergey Nikonov (17seannnn)
-;;; CDECL
+;;; CDECL - macroses'll spoil eax, ecx, edx registers
 
 ;; Input/Output definitions
 %define stdin  0
@@ -116,7 +116,8 @@
         read    stdin, edi, 1   ; read from stdout, in edi, 1 character
         test    eax, eax        ; if read count > 1
         jnz     %%success       ;   jump to success
-        mov     eax, -1         ; indicate error
+        xor     eax, eax        ; indicate error, eax = -1
+        not     eax
         jmp     %%return        ; return value
 %%success:
         mov     al, [edi]   ; [edi] -> al

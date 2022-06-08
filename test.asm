@@ -31,7 +31,7 @@ _start:
 .next:
         sub     esp, 260        ; 256 byte string + 4 byte integer
         lea     esi, [esp+4]    ; string == esi
-        lea     edi, [esp]      ; integer == edi
+        mov     edi, esp        ; integer == edi
 
         read    stdin, esi, 256     ; read string
         cmp     eax, EOF            ; if not EOF
