@@ -99,9 +99,10 @@
 %endmacro
 
 ; getargv(register)
-; returns address of first arg pointer, to go through add 4 to the address
+; returns address of first arg pointer, to go through add 4 to
+;   the address and get value from memory to access string
 %macro getargv 1
-        mov     %1, [esp+4]
+        lea     %1, [esp+4]
 %endmacro
 
 ; getc()
