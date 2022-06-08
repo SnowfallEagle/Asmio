@@ -24,79 +24,67 @@
 %define AO_A  0x440
 
 ;; Macroses
+%macro _syscall 1-4
+        push    ebx         ; save ebx
+
+    %if %0 == 4             ; get args
+        push    %4
+    %endif
+    %if %0 >= 3
+        push    %3
+    %endif
+    %if %0 >= 2
+        push    %2
+    %endif
+        push    %1
+
+        pop     eax         ; store them in registers
+    %if %0 >= 2
+        pop     ebx
+    %endif
+    %if %0 >= 3
+        pop     ecx
+    %endif
+    %if %0 >= 4
+        pop     edx
+    %endif
+
+        int     0x80        ; syscall
+
+        pop     ebx
+%endmacro
+
 ; exit(status)
 %macro exit 0-1 0
-        mov     ebx, %1     ; status -> ebx
-        mov     eax, 1      ; exit
-        int     0x80        ; syscall
+        _syscall    1, %1   ; exit with status in first arg
 %endmacro
 
 ; read(file_descriptor, buffer, count)
 ; returns how much characters have been read, EOF on end of file
 %macro read 3
-        push    ebx         ; save ebx
-        pushf               ; save flags
-
-        push    %3
-        push    %2
-        push    %1
-        pop     ebx         ; file_descriptor
-        pop     ecx         ; buffer
-        pop     edx         ; count
-
-        mov     eax, 3      ; read
-        int     0x80        ; syscall
-
-        pop     ebx         ; restore ebx
-        popf                ; restore flags
+        _syscall    3, %1, %2, %3
 %endmacro
 
 ; write(file_descriptor, buffer, count)
 ; returns how much characterss have been written
 %macro write 3
-        push    ebx         ; save ebx
-
-        push    %3          ; push arguments because it can be lost
-        push    %2
-        push    %1
-        pop     ebx
-        pop     ecx
-        pop     edx
-
-        mov     eax, 4      ; write
-        int     0x80        ; syscall
-
-        pop     ebx         ; restore ebx
+        _syscall    4, %1, %2, %3
 %endmacro
 
 ; open(file_path that have to has null-byte)
 ; returns file descriptor, -1 on error
 %macro open 2-3
-        pushf               ; save flags
-
-    %if %0 == 3             ; put args in registers
-        push    %3
-    %endif
-        push    %2
-        push    %1
-        pop        ebx
-        pop        ecx
     %if %0 == 3
-        pop        edx
+        _syscall    5, %1, %2, %3
+    %else
+        _syscall    5, %1, %2
     %endif
-
-        mov        eax, 5   ; open
-        int        0x80     ; syscall
-
-        popf                ; restore flags
 %endmacro
 
 ; close(file_descriptor)
 ; returns 0 on success, -1 on error
 %macro close 1
-        mov     ebx, %1     ; first arg -> ebx
-        mov     eax, 6      ; close
-        int     0x80        ; syscall
+        _syscall    6, %1
 %endmacro
 
 ; getc()
