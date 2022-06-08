@@ -1,13 +1,13 @@
 ;;; License: LGPL-2.1
 ;;; Copyright (C) 2022 Sergey Nikonov (17seannnn)
 
-;; Standard definitions
+;; Input/Output definitions
 %define stdin  0
 %define stdout 1
 %define stderr 2
-
 %define EOF -1
 
+;; Open definitions
 %define O_RDONLY 0x000
 %define O_WRONLY 0x001
 %define O_RDWR   0x002
@@ -15,6 +15,13 @@
 %define O_EXCL   0x080
 %define O_TRUNC  0x200
 %define O_APPEND 0x400
+
+;; Additional Open definitions
+%define AO_R  0x000
+%define AO_R+ 0x002
+%define AO_W  0x241
+%define AO_W+ 0x242
+%define AO_A  0x440
 
 ;; Macroses
 ; exit(status)

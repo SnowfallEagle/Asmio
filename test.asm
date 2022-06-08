@@ -23,10 +23,7 @@ _start: getc                ; get character
         write   stdout, esi, eax    ; write what we`ve read
 
 ;; Check open/close operations
-        mov     ebx, O_WRONLY   ; new file flags
-        or      ebx, O_CREAT
-        or      ebx, O_TRUNC
-        open    fn, ebx, 666q   ; open file
+        open    fn, AO_W, 666q   ; create file for writing, truncate it
         cmp     eax, -1     ; if -1 returned
         je      .clean      ;   jump to clean
         write   eax, esi, dword [edi] ; write to file
