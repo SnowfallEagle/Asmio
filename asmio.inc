@@ -1,3 +1,6 @@
+;;; License: LGPL-2.1
+;;; Copyright (C) 2022 Sergey Nikonov (17seannnn)
+
 %define stdin  0
 %define stdout 1
 %define stderr 2
