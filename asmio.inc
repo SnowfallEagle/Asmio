@@ -108,11 +108,11 @@
 ; return character in AL, -1 on EOF
 %macro getc 0
         pushf               ; save flags
+        push    edi         ; save edi
         sub     esp, 4      ; local variable for buffer
-
         mov     edi, esp    ; edi == buffer
-        read    stdin, edi, 1   ; read from stdout, in edi, 1 character
 
+        read    stdin, edi, 1   ; read from stdout, in edi, 1 character
         test    eax, eax    ; if read count > 1
         jnz     %%success   ;   jump to success
         mov     eax, -1     ; indicate error
@@ -122,6 +122,7 @@
 
 %%return:
         add     esp, 4      ; free local variable
+        pop     edi         ; restore edi
         popf                ; restore flags
 %%end:
 %endmacro
