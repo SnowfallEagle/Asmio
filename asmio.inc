@@ -29,6 +29,8 @@
 %define MO_CREATOR 600q
 
 ;; Macroses
+; _syscall(n, ...)
+; returns eax
 %macro _syscall 1-4
         push    ebx         ; save ebx
 
