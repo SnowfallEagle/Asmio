@@ -1,12 +1,22 @@
 ;;; License: LGPL-2.1
 ;;; Copyright (C) 2022 Sergey Nikonov (17seannnn)
 
+;; Standard definitions
 %define stdin  0
 %define stdout 1
 %define stderr 2
 
 %define EOF -1
 
+%define O_RDONLY 0x000
+%define O_WRONLY 0x001
+%define O_RDWR   0x002
+%define O_CREAT  0x040
+%define O_EXCL   0x080
+%define O_TRUNC  0x200
+%define O_APPEND 0x400
+
+;; Macroses
 ; exit(status)
 %macro exit 0-1 0
         mov     ebx, %1     ; status -> ebx
