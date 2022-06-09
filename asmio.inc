@@ -9,24 +9,25 @@
 %define EOF -1
 
 ;; Open definitions
-%define O_RDONLY 0x000
-%define O_WRONLY 0x001
-%define O_RDWR   0x002
-%define O_CREAT  0x040
-%define O_EXCL   0x080
-%define O_TRUNC  0x200
-%define O_APPEND 0x400
+%define O_RDONLY 0x000      ; Only for reading
+%define O_WRONLY 0x001      ; Only for writing
+%define O_RDWR   0x002      ; Read and writing
+%define O_CREAT  0x040      ; Create file if it doesn't exist
+%define O_EXCL   0x080      ; Must create new file, if file exist return error
+%define O_TRUNC  0x200      ; If file exists, remove all content
+%define O_APPEND 0x400      ; Write in end of file
 
 ;; Additional Open definitions
-%define AO_R  0x000
-%define AO_R+ 0x002
-%define AO_W  0x241
-%define AO_W+ 0x242
-%define AO_A  0x440
+%define AO_R  0x000         ; Only for reading
+%define AO_R+ 0x002         ; Reading and writing, file have to exist
+%define AO_W  0x241         ; Truncate file, open for writing
+%define AO_W+ 0x242         ; Truncate file, open for reading and writing
+%define AO_A  0x400         ; Open file for append
 
 ;; Mode Open definitions
-%define MO_ALL     666q
-%define MO_CREATOR 600q
+; When you creating a file, you have to choose its mode
+%define MO_ALL     666q     ; Means reading/writing for all
+%define MO_OWNER   600q     ; Means reading/writing only for file owner
 
 ;; Macroses
 ; _syscall(n, ...)
