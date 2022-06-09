@@ -228,9 +228,10 @@
 %macro print 1
         pushf               ; save flags
 
-        jmp     %%do        ; jump to do
-%%str   db      %1, 0       ; define string
-%%do:   puts    %%str
+        jmp     %%do                    ; jump to do
+%%str   db      %1, 10                  ; define string
+%%strln equ     $-%%str                 ; its len
+%%do:   write   stdout, %%str, %%strln  ; write
 
         popf                ; restore flags
 %endmacro
