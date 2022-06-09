@@ -55,10 +55,9 @@ _start: print   "> Arguments count"
         fgetc   edi                 ; get char from file
         putc    al                  ; put character
         putc    10                  ; put new line
-        strlen  esi                 ; get length of string
-        ;fgets   esi, eax            ; get what remain from this string
         print   "> What remain from this string"
-        ;puts    esi
+        fgets   edi, esi, 256       ; get what remain from this string
+        puts    esi                 ; put this string
         close   edi                 ; close file
 
 .clean: print   "> Check log file"

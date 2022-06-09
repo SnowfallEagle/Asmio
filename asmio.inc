@@ -170,7 +170,6 @@
         fgetc   stdin
 %endmacro
 
-
 ; fputc(file descriptor, 1 byte register)
 ; return 1 on success, 0 on fail
 %macro fputc 2
@@ -221,14 +220,16 @@
         fputs   stdout, %1
 %endmacro
 
-; gets(buffer, buffer size)
+; fgets(file descriptor, buffer, buffer size)
 ; return -1 on error, 0 on success
-%macro gets 2
+%macro fgets 3
         pushf               ; save flags
         push    edi         ; save edi
 
-        push dword %2       ; get args
+        push    %3          ; get args
+        push    %2
         push    %1
+        pop     edx         ; edx = fd
         pop     edi         ; eax = buffer
         pop     ecx         ; ecx = buffer size
 
@@ -237,7 +238,7 @@
         mov     eax, -1     ; error -> eax
         jmp     %%return    ; jump to return
 
-%%get:  read    stdin, edi, ecx ; read string
+%%get:  read    edx, edi, ecx   ; read string
         test    eax, eax        ; eax contains how much characters`ve 
                                 ;   been read
         jz      %%null          ; if nothing was read
@@ -249,6 +250,12 @@
 %%return:
         pop     edi         ; restore edi
         popf                ; restore flags
+%endmacro
+
+; gets(buffer, buffer size)
+; return -1 on error, 0 on success
+%macro gets 2
+        fgets   stdin, %1, %2
 %endmacro
 
 ; print(string)
