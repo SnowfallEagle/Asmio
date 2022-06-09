@@ -42,13 +42,14 @@ _start:
         lea     esi, [esp+4]    ; string == esi
         mov     edi, esp        ; integer == edi
 
-        read    stdin, esi, 256     ; read string
-        cmp     eax, EOF            ; if not EOF
+        gets    esi, 256            ; get string
+        cmp     eax, -1             ; if fail
         je      .clean              ;   jump to clean
-        mov     [edi], eax          ; eax -> integer
-        write   stdout, esi, eax    ; write what we`ve read
+        puts    esi                 ; put this string
 
 ;; Check open/close operations
+        strlen  esi                     ; string length -> eax
+        mov     [edi], eax              ; eax -> integer
         open    fn, AO_W, MO_ALL        ; create file for all for writing
         cmp     eax, -1                 ; if -1 returned
         je      .clean                  ;   jump to clean

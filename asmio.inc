@@ -192,3 +192,33 @@
         pop     esi         ; restore esi
         popf                ; restore flags
 %endmacro
+
+; gets(buffer, buffer size)
+; return -1 on error, 0 on success
+%macro gets 2
+        pushf               ; save flags
+        push    edi         ; save edi
+
+        push dword %2       ; get args
+        push    %1
+        pop     edi         ; eax = buffer
+        pop     ecx         ; ecx = buffer size
+
+        test    ecx, ecx    ; if ecx != 0
+        jnz     %%get       ;   jump to get string
+        mov     eax, -1     ; error -> eax
+        jmp     %%return    ; jump to return
+
+%%get:  read    stdin, edi, ecx ; read string
+        test    eax, eax        ; eax contains how much characters`ve 
+                                ;   been read
+        jz      %%null          ; if nothing was read
+                                ;   just set null byte in buf[0]
+        dec     eax             ; but if we read something
+                                ;   we should set 0 on '\n'
+%%null: mov byte [edi+eax], 0   ; set null-byte
+        mov     eax, 0          ; return success
+%%return:
+        pop     edi         ; restore edi
+        popf                ; restore flags
+%endmacro
