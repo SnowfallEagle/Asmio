@@ -34,7 +34,6 @@
 ; return eax
 %macro _syscall 1-4
         push    ebx         ; save ebx
-
     %if %0 == 4             ; get args
         push    %4
     %endif
@@ -45,7 +44,6 @@
         push    %2
     %endif
         push    %1
-
         pop     eax         ; store them in registers
     %if %0 >= 2
         pop     ebx
@@ -56,9 +54,7 @@
     %if %0 >= 4
         pop     edx
     %endif
-
         int     0x80        ; syscall
-
         pop     ebx         ; restore ebx
 %endmacro
 
@@ -77,18 +73,14 @@
 ; return string length
 %macro strlen 1
         pushf               ; save flags
-
         mov     edx, %1     ; first arg -> edx
         xor     eax, eax    ; clean counter
-
-%%lp:
-        mov     cl, [edx]   ; [edx] -> cl
+%%lp:   mov     cl, [edx]   ; [edx] -> cl
         test    cl, cl      ; if ecx == 0
         jz      %%return    ;   jump to return
         inc     eax         ; increment counter
         inc     edx         ; increment address
         jmp     %%lp        ; jump to loop
-
 %%return:
         popf                ; restore flags
 %endmacro
@@ -145,10 +137,8 @@
         pushf               ; save flags
         push    edi         ; save edi
         sub     esp, 4      ; local variable for buffer
-
         mov     edx, %1     ; edx = fd
         mov     edi, esp    ; edi = buffer
-
         read    edx, edi, 1     ; read from stdout, in edi, 1 character
         test    eax, eax        ; if read count > 1
         jnz     %%success       ;   jump to success
@@ -157,7 +147,6 @@
         jmp     %%return        ; return value
 %%success:
         mov     al, [edi]   ; [edi] -> al
-
 %%return:
         add     esp, 4      ; free local variable
         pop     edi         ; restore edi
@@ -177,13 +166,10 @@
         pushf               ; save flags
         push    esi         ; save esi
         sub     esp, 4      ; buffer
-
         mov byte [esp], %2  ; put character in buffer
         mov     edx, %1     ; edx = fd
         mov     esi, esp    ; esi = buffer
-
         write   edx, esi, 1 ; write in fd, from esi, 1 character
-
         add     esp, 4      ; free buffer
         pop     esi         ; restore esi
         popf                ; restore flags
@@ -201,7 +187,6 @@
         pushf               ; save flags
         push    esi         ; save esi
         push    edi         ; save edi
-
         push    %2                  ; get args
         push    %1
         pop     edi                 ; edi = fd
@@ -209,7 +194,6 @@
         strlen  esi                 ; string length -> eax
         write   edi, esi, eax       ; write in fd, from esi, eax characters
         fputc   edi, 10             ; new line
-
         pop     edi         ; restore edi
         pop     esi         ; restore esi
         popf                ; restore flags
@@ -226,26 +210,20 @@
 %macro fgets 3
         pushf               ; save flags
         push    edi         ; save edi
-
         push    %3          ; get args
         push    %2
         push    %1
         pop     edx         ; edx = fd
         pop     edi         ; eax = buffer
         pop     ecx         ; ecx = buffer size
-
         test    ecx, ecx    ; if ecx != 0
         jnz     %%get       ;   jump to get string
         mov     eax, -1     ; error -> eax
         jmp     %%return    ; jump to return
-
 %%get:  read    edx, edi, ecx   ; read string
-        test    eax, eax        ; eax contains how much characters`ve 
-                                ;   been read
-        jz      %%null          ; if nothing was read
-                                ;   just set null byte in buf[0]
-        dec     eax             ; but if we read something
-                                ;   we should set 0 on '\n'
+        test    eax, eax        ; eax contains how much characters were read
+        jz      %%null          ; if nothing was read just set null byte
+        dec     eax             ; but if we read something, we set 0 on '\n'
 %%null: mov byte [edi+eax], 0   ; set null-byte
         mov     eax, 0          ; return success
 %%return:
@@ -262,14 +240,12 @@
 ; fprint(file descriptor, string)
 ; macro file print function, return non-zero value on success
 %macro fprint 2
-        pushf               ; save flags
-
+        pushf                           ; save flags
         jmp     %%do                    ; jump to do
 %%str   db      %2, 10                  ; define string
 %%strln equ     $-%%str                 ; its len
 %%do:   write   %1, %%str, %%strln      ; write in fd, this string
-
-        popf                ; restore flags
+        popf                            ; restore flags
 %endmacro
 
 ; print(string)
