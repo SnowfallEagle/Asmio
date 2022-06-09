@@ -47,15 +47,16 @@ _start: print   "> Arguments count"
         cmp     eax, -1             ; if -1 returned
         je      .clean              ;   jump to clean
         mov     edi, eax            ; edi = eax, because eax'll be spoiled
+        fprint  edi, "* if you can see it, fprint worked *"
         fputs   edi, esi            ; write to file
         close   edi                 ; close to reopen
         open    fn, AO_R            ; open again to set seek on beginning
         mov     edi, eax            ; edi = fd
-        print   "> Character from file"
+        print   "> First character from this file"
         fgetc   edi                 ; get char from file
         putc    al                  ; put character
         putc    10                  ; put new line
-        print   "> What remain from this string"
+        print   "> What remains in file"
         fgets   edi, esi, 256       ; get what remain from this string
         puts    esi                 ; put this string
         close   edi                 ; close file

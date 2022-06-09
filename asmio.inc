@@ -258,15 +258,21 @@
         fgets   stdin, %1, %2
 %endmacro
 
-; print(string)
-; macro print function, return non-zero value on success
-%macro print 1
+; fprint(file descriptor, string)
+; macro file print function, return non-zero value on success
+%macro fprint 2
         pushf               ; save flags
 
         jmp     %%do                    ; jump to do
-%%str   db      %1, 10                  ; define string
+%%str   db      %2, 10                  ; define string
 %%strln equ     $-%%str                 ; its len
-%%do:   write   stdout, %%str, %%strln  ; write
+%%do:   write   %1, %%str, %%strln      ; write in fd, this string
 
         popf                ; restore flags
+%endmacro
+
+; print(string)
+; macro print function, return non-zero value on success
+%macro print 1
+        fprint  stdout, %1
 %endmacro
