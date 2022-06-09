@@ -6,7 +6,6 @@
 %define stdin  0
 %define stdout 1
 %define stderr 2
-%define EOF -1
 
 ;; Open definitions
 %define O_RDONLY 0x000      ; Only for reading
@@ -91,7 +90,7 @@
 %endmacro
 
 ; read(file_descriptor, buffer, count)
-; return how much characters have been read, EOF on end of file
+; return how much characters have been read, 0 on end of file
 %macro read 3
         _syscall    3, %1, %2, %3
 %endmacro
@@ -132,7 +131,7 @@
 %endmacro
 
 ; fgetc(file descriptor)
-; return character on success, EOF on failure
+; return character on success, -1 on failure
 %macro fgetc 1
         pushf               ; save flags
         push    edi         ; save edi
@@ -155,7 +154,7 @@
 %endmacro
 
 ; getc()
-; return character on success, EOF on failure
+; return character on success, -1 on failure
 %macro getc 0
         fgetc   stdin
 %endmacro
