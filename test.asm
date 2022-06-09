@@ -34,29 +34,25 @@ _start:
 .lp:    mov     ebx, [edi]      ; argv string address -> ebx
         test    ebx, ebx        ; if ebx == 0
         jz      .next           ;   jump to next
-        puts    [edi]           ; put string from 1 arg
+        puts dword [edi]        ; put string from 1 arg
         add     edi, 4          ; get next address
         jmp     .lp             ; jump to loop
 
 ;; Check string operations
 .next:
-        sub     esp, 260        ; 256 byte string + 4 byte integer
-        lea     esi, [esp+4]    ; string == esi
-        mov     edi, esp        ; integer == edi
+        sub     esp, 256        ; 256 byte string
+        mov     esi, esp        ; string == esi
 
-        gets    esi, 256            ; get string
-        cmp     eax, -1             ; if fail
-        je      .clean              ;   jump to clean
-        puts    esi                 ; put this string
+        gets    esi, 256        ; get string
+        cmp     eax, -1         ; if fail
+        je      .clean          ;   jump to clean
 
 ;; Check open/close operations
-        strlen  esi                     ; string length -> eax
-        mov     [edi], eax              ; eax -> integer
-        open    fn, AO_W, MO_ALL        ; create file for all for writing
-        cmp     eax, -1                 ; if -1 returned
-        je      .clean                  ;   jump to clean
-        write   eax, esi, dword [edi]   ; write to file
-        close   eax                     ; close file
+        open    fn, AO_W, MO_ALL    ; create file for all for writing
+        cmp     eax, -1             ; if -1 returned
+        je      .clean              ;   jump to clean
+        fputs   eax, esi            ; write to file
+        close   eax                 ; close file
 
-.clean: add     esp, 260    ; free string and integer
+.clean: add     esp, 256    ; free string and integer
         exit                ; successful exit

@@ -162,18 +162,46 @@
 %%end:
 %endmacro
 
+; fputc(file descriptor, 1 byte register)
+; return 1 on success, 0 on fail
+%macro fputc 2
+        pushf               ; save flags
+        push    esi         ; save esi
+        sub     esp, 4      ; buffer
+
+        mov byte [esp], %2  ; put character in buffer
+        mov     edx, %1     ; edx = fd
+        mov     esi, esp    ; esi = buffer
+
+        write   edx, esi, 1 ; write in fd, from esi, 1 character
+
+        add     esp, 4      ; free buffer
+        pop     esi         ; restore esi
+        popf                ; restore flags
+%endmacro
+
 ; putc(1 byte register)
 ; return 1 on success, 0 on fail
 %macro putc 1
+        fputc   stdout, %1
+%endmacro
+
+; fputs(file descriptor, null-terminated string)
+; return non-zero value on success
+%macro fputs 2
         pushf               ; save flags
         push    esi         ; save esi
-        sub     esp, 4      ; local variable
-        mov     esi, esp    ; esi == buffer
+        push    edi         ; save edi
 
-        mov byte [esi], %1      ; first arg -> local variable
-        write   stdout, esi, 1  ; write in stdout, from esi, 1 character
+        push    %2                  ; get args
+        push    %1
+        pop     edi                 ; edi = fd
+        pop     esi                 ; esi = string
+        strlen  esi                 ; string length -> eax
+        write   edi, esi, eax       ; write in fd, from esi, eax characters
+        fputc   edi, 10             ; new line
 
-        add     esp, 4      ; free memory
+        pop     edi         ; restore edi
         pop     esi         ; restore esi
         popf                ; restore flags
 %endmacro
@@ -181,16 +209,7 @@
 ; puts(null-terminated string)
 ; return non-zero value on success
 %macro puts 1
-        pushf               ; save flags
-        push    esi         ; save esi
-
-        mov     esi, %1             ; first arg -> esi
-        strlen  esi                 ; string length -> eax
-        write   stdout, esi, eax    ; write in stdout, from esi, eax characters
-        putc    10                  ; new line
-
-        pop     esi         ; restore esi
-        popf                ; restore flags
+        fputs   stdout, %1
 %endmacro
 
 ; gets(buffer, buffer size)
