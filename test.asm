@@ -18,6 +18,8 @@ test_vcall:
         ret                     ; return
 
 _start:
+;; Print check
+        print   "print..."
 ;; Show arguments count
         getargc eax             ; argc -> eax
         sub     esp, 4          ; local variable for argc

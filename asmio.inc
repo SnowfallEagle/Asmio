@@ -222,3 +222,15 @@
         pop     edi         ; restore edi
         popf                ; restore flags
 %endmacro
+
+; print(string)
+; macro print function, return non-zero value on success
+%macro print 1
+        pushf               ; save flags
+
+        jmp     %%do        ; jump to do
+%%str   db      %1, 0       ; define string
+%%do:   puts    %%str
+
+        popf                ; restore flags
+%endmacro
