@@ -6,7 +6,7 @@ LDFLAGS=-m elf_i386
 	$(AS) $(ASFLAGS) $< -o $@
 
 test: test.o
-	ld $(LDFLAGS) $^ -o $@
+	$(LD) $(LDFLAGS) $^ -o $@
 
 clean:
 	$(RM) -f *.o *.s test log
