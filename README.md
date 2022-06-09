@@ -48,3 +48,27 @@ Also, you can build this test with make command.
 |---|---|
 | MO_ALL   | reading/writing for all   |
 | MO_OWNER | reading/writing for owner |
+
+#### Table of macros
+| Macro | Args | Return |
+|---|---|---|
+| _syscall | 1-4 args for system calls | same as syscall you calling |
+| vcall | 1-* args, first have to be label | same as your function |
+| strlen | null-terminated string | its length |
+| exit | exit status or nothing on success | nothing can be returned |
+| read | file descriptor, buffer, count | how much chars were read |
+| write | file descriptor, buffer, count | how much chars were wrote |
+| open | file path, how to open, mode only if we create file | file descriptor |
+| close | file descriptor | don't check it |
+| getargc | where to move args count | nothing |
+| getargv | where to move args variables | nothing |
+| fgetc | file descriptor | character |
+| getc | nothing | character |
+| fputc | file descriptor, character | non-zero on success |
+| putc | character | non-zero on success
+| fputs | file descriptor, null-terminated string | non-zero value on success|
+| puts | null-terminated string | non-zero value on success |
+| fgets | file descriptor, buffer, size | non-zero value on success |
+| gets | string, size | non-zero value |
+| fprint file desctiptor, string in "quotes" | non-zero value on success |
+| print| string in "quotes" | non-zero on success |
