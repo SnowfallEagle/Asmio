@@ -70,5 +70,5 @@ Also, you can build this test with make command.
 | puts | null-terminated string | non-zero value on success |
 | fgets | file descriptor, buffer, size | non-zero value on success |
 | gets | string, size | non-zero value |
-| fprint file desctiptor, string in "quotes" | non-zero value on success |
+| fprint | file desctiptor, string in "quotes" | non-zero value on success |
 | print| string in "quotes" | non-zero on success |
