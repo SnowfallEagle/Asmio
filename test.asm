@@ -18,9 +18,8 @@ test_vcall:
         ret                     ; return
 
 _start:
-;; Print check
-        print   "print..."
 ;; Show arguments count
+        print   "> Arguments count"
         getargc eax             ; argc -> eax
         sub     esp, 4          ; local variable for argc
         mov     edi, esp        ; edi = &argc
@@ -30,6 +29,7 @@ _start:
         add     esp, 4          ; free local variable
 
 ;; Show all arguments
+        print   "> Arguments` variables"
         getargv edi             ; argv -> edi
 .lp:    mov     ebx, [edi]      ; argv string address -> ebx
         test    ebx, ebx        ; if ebx == 0
@@ -39,7 +39,7 @@ _start:
         jmp     .lp             ; jump to loop
 
 ;; Check string operations
-.next:
+.next:  print   "> Enter string"
         sub     esp, 256        ; 256 byte string
         mov     esi, esp        ; string == esi
 
@@ -51,8 +51,10 @@ _start:
         open    fn, AO_W, MO_ALL    ; create file for all for writing
         cmp     eax, -1             ; if -1 returned
         je      .clean              ;   jump to clean
-        fputs   eax, esi            ; write to file
-        close   eax                 ; close file
+        mov     edi, eax            ; edi = eax, because eax'll be spoiled
+        fputs   edi, esi            ; write to file
+        close   edi                 ; close file
 
-.clean: add     esp, 256    ; free string and integer
+.clean: print   "> Check log file"
+        add     esp, 256    ; free string and integer
         exit                ; successful exit
