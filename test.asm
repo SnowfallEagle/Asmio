@@ -17,9 +17,7 @@ test_vcall:
         putc    10              ; new line
         ret                     ; return
 
-_start:
-;; Show arguments count
-        print   "> Arguments count"
+_start: print   "> Arguments count"
         getargc eax             ; argc -> eax
         sub     esp, 4          ; local variable for argc
         mov     edi, esp        ; edi = &argc
@@ -28,7 +26,6 @@ _start:
         mov     eax, [edi]      ; get argc
         add     esp, 4          ; free local variable
 
-;; Show all arguments
         print   "> Arguments` variables"
         getargv edi             ; argv -> edi
 .lp:    mov     ebx, [edi]      ; argv string address -> ebx
@@ -38,7 +35,6 @@ _start:
         add     edi, 4          ; get next address
         jmp     .lp             ; jump to loop
 
-;; Check string operations
 .next:  print   "> Enter string"
         sub     esp, 256        ; 256 byte string
         mov     esi, esp        ; string == esi
@@ -47,12 +43,22 @@ _start:
         cmp     eax, -1         ; if fail
         je      .clean          ;   jump to clean
 
-;; Check open/close operations
         open    fn, AO_W, MO_ALL    ; create file for all for writing
         cmp     eax, -1             ; if -1 returned
         je      .clean              ;   jump to clean
         mov     edi, eax            ; edi = eax, because eax'll be spoiled
         fputs   edi, esi            ; write to file
+        close   edi                 ; close to reopen
+        open    fn, AO_R            ; open again to set seek on beginning
+        mov     edi, eax            ; edi = fd
+        print   "> Character from file"
+        fgetc   edi                 ; get char from file
+        putc    al                  ; put character
+        putc    10                  ; put new line
+        strlen  esi                 ; get length of string
+        ;fgets   esi, eax            ; get what remain from this string
+        print   "> What remain from this string"
+        ;puts    esi
         close   edi                 ; close file
 
 .clean: print   "> Check log file"

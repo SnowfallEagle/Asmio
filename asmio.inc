@@ -138,15 +138,17 @@
         lea     %1, [esp+4]
 %endmacro
 
-; getc()
-; return character in AL, -1 on EOF
-%macro getc 0
+; fgetc(file descriptor)
+; return character on success, EOF on failure
+%macro fgetc 1
         pushf               ; save flags
         push    edi         ; save edi
         sub     esp, 4      ; local variable for buffer
-        mov     edi, esp    ; edi == buffer
 
-        read    stdin, edi, 1   ; read from stdout, in edi, 1 character
+        mov     edx, %1     ; edx = fd
+        mov     edi, esp    ; edi = buffer
+
+        read    edx, edi, 1     ; read from stdout, in edi, 1 character
         test    eax, eax        ; if read count > 1
         jnz     %%success       ;   jump to success
         xor     eax, eax        ; indicate error, eax = -1
@@ -161,6 +163,13 @@
         popf                ; restore flags
 %%end:
 %endmacro
+
+; getc()
+; return character on success, EOF on failure
+%macro getc 0
+        fgetc   stdin
+%endmacro
+
 
 ; fputc(file descriptor, 1 byte register)
 ; return 1 on success, 0 on fail
