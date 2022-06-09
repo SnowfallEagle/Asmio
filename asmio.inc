@@ -72,6 +72,26 @@
         add     esp, (%0 - 1) * 4   ; clean stack
 %endmacro
 
+; strlen(null-terminated string)
+; return string length
+%macro strlen 1
+        pushf               ; save flags
+
+        mov     edx, %1     ; first arg -> edx
+        xor     eax, eax    ; clean counter
+
+%%lp:
+        mov     cl, [edx]   ; [edx] -> cl
+        test    cl, cl      ; if ecx == 0
+        jz      %%return    ;   jump to return
+        inc     eax         ; increment counter
+        inc     edx         ; increment address
+        jmp     %%lp        ; jump to loop
+
+%%return:
+        popf                ; restore flags
+%endmacro
+
 ; exit(status)
 %macro exit 0-1 0
         _syscall    1, %1   ; exit with status in first arg
@@ -155,26 +175,6 @@
 
         add     esp, 4      ; free memory
         pop     esi         ; restore esi
-        popf                ; restore flags
-%endmacro
-
-; strlen(null-terminated string)
-; return string length
-%macro strlen 1
-        pushf               ; save flags
-
-        mov     edx, %1     ; first arg -> edx
-        xor     eax, eax    ; clean counter
-
-%%lp:
-        mov     cl, [edx]   ; [edx] -> cl
-        test    cl, cl      ; if ecx == 0
-        jz      %%return    ;   jump to return
-        inc     eax         ; increment counter
-        inc     edx         ; increment address
-        jmp     %%lp        ; jump to loop
-
-%%return:
         popf                ; restore flags
 %endmacro
 
