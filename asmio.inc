@@ -61,6 +61,17 @@
         pop     ebx         ; restore ebx
 %endmacro
 
+; vcall(function, ...)
+%macro vcall 1-*
+  %rep %0 - 1                       ; push all args from the end
+    %rotate -1
+        push    %1
+  %endrep                           ; function become last in the list of args
+  %rotate -1                        ; make it first
+        call    %1                  ; call it
+        add     esp, (%0 - 1) * 4   ; clean stack
+%endmacro
+
 ; exit(status)
 %macro exit 0-1 0
         _syscall    1, %1   ; exit with status in first arg
