@@ -30,7 +30,7 @@
 
 ;; Macroses
 ; _syscall(n, ...)
-; returns eax
+; return eax
 %macro _syscall 1-4
         push    ebx         ; save ebx
 
@@ -67,19 +67,19 @@
 %endmacro
 
 ; read(file_descriptor, buffer, count)
-; returns how much characters have been read, EOF on end of file
+; return how much characters have been read, EOF on end of file
 %macro read 3
         _syscall    3, %1, %2, %3
 %endmacro
 
 ; write(file_descriptor, buffer, count)
-; returns how much characters have been written
+; return how much characters have been written
 %macro write 3
         _syscall    4, %1, %2, %3
 %endmacro
 
 ; open(file_path that have to has null-byte)
-; returns file descriptor, -1 on error
+; return file descriptor, -1 on error
 %macro open 2-3
     %if %0 == 3
         _syscall    5, %1, %2, %3
@@ -89,19 +89,19 @@
 %endmacro
 
 ; close(file_descriptor)
-; returns 0 on success, -1 on error
+; return 0 on success, -1 on error
 %macro close 1
         _syscall    6, %1
 %endmacro
 
 ; getargc(register)
-; returns argc, works only on start when esp is not spoiled
+; return argc, works only on start when esp is not spoiled
 %macro getargc 1
         mov     %1, [esp]
 %endmacro
 
 ; getargv(register)
-; returns address of first arg pointer, to go through add 4 to
+; return address of first arg pointer, to go through add 4 to
 ;   the address and get value from memory to access string
 %macro getargv 1
         lea     %1, [esp+4]
@@ -148,7 +148,7 @@
 %endmacro
 
 ; strlen(null-terminated string)
-; returns string length
+; return string length
 %macro strlen 1
         pushf               ; save flags
 
@@ -168,7 +168,7 @@
 %endmacro
 
 ; puts(null-terminated string)
-; returns non-zero value on success
+; return non-zero value on success
 %macro puts 1
         pushf               ; save flags
         push    esi         ; save esi
