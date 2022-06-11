@@ -22,4 +22,5 @@ string
 EOF
 )
 
-([[ $output = $except ]] && echo "Test passed") || ! echo "Test failed"
+([[ $output = $except ]] && echo -e "\x1b[32mTest passed\033[0m") ||
+! echo -e "\x1b[31mTest failed\033[0m"
