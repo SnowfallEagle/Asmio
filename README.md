@@ -13,7 +13,7 @@ asmio
 
 #### Usage examples
 You can find usage examples in test.asm file.
-Also, you can build this test with make command.
+Also, you can build test with make command.
 
 #### Table of file descriptor definitions
 | Definition | Meaning |
